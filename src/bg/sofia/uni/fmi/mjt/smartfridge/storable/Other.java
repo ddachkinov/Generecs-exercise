@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class Other implements Storable {
     @Override
     public StorableType getType() {
-        return null;
+        return StorableType.OTHER;
     }
 
     @Override
