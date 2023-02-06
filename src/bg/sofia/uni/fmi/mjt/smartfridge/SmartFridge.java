@@ -9,7 +9,7 @@ import bg.sofia.uni.fmi.mjt.smartfridge.storable.StorableByExpirationComparator;
 
 import java.util.*;
 
-public class SmartFridge implements SmartFridgeAPI{
+public class SmartFridge implements SmartFridgeAPI {
 
     private final int totalCapacity;
     private int currentCapacity;
@@ -32,7 +32,7 @@ public class SmartFridge implements SmartFridgeAPI{
         }
 
         storage.putIfAbsent(item.getName(), new PriorityQueue<>(new StorableByExpirationComparator()));
-        for (int i=0; i < quantity; i++){
+        for (int i = 0; i < quantity; i++) {
             storage.get(item.getName()).add(item);
         }
 
@@ -41,7 +41,20 @@ public class SmartFridge implements SmartFridgeAPI{
 
     @Override
     public List<? extends Storable> retrieve(String itemName) {
-        return null;
+
+        if ((itemName == null) || itemName.isEmpty() || itemName.isBlank()) {
+            throw new IllegalArgumentException("Not an item");
+        }
+
+        if (!storage.containsKey(itemName)) {
+          return new LinkedList<>();
+
+        }
+        List<Storable> retrieved = new LinkedList<>(storage.get(itemName));
+        currentCapacity -= retrieved.size();
+        storage.remove(itemName);
+        return retrieved;
+
     }
 
     @Override
