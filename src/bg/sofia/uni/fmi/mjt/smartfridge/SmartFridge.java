@@ -47,7 +47,7 @@ public class SmartFridge implements SmartFridgeAPI {
         }
 
         if (!storage.containsKey(itemName)) {
-          return new LinkedList<>();
+            return new LinkedList<>();
 
         }
         List<Storable> retrieved = new LinkedList<>(storage.get(itemName));
@@ -59,7 +59,24 @@ public class SmartFridge implements SmartFridgeAPI {
 
     @Override
     public List<? extends Storable> retrieve(String itemName, int quantity) throws InsufficientQuantityException {
-        return null;
+
+        if ((itemName == null) || itemName.isEmpty() || itemName.isBlank()) {
+            throw new IllegalArgumentException("Not an item");
+        }
+
+        if (!storage.containsKey(itemName) || storage.get(itemName).size() < quantity)
+            throw new InsufficientQuantityException("Not enough " + itemName + " in the fridge.");
+
+        List<Storable> retrieved = new LinkedList<>();
+        Queue<Storable> foods = storage.get(itemName);
+
+        for (int i = 0; i < quantity; i++) {
+            retrieved.add(foods.poll());
+        }
+        currentCapacity -= quantity;
+
+        return retrieved;
+
     }
 
     @Override
