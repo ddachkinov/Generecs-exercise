@@ -81,7 +81,7 @@ public class SmartFridge implements SmartFridgeAPI {
 
     @Override
     public int getQuantityOfItem(String itemName) {
-        if(itemName == null || itemName.isEmpty() || itemName.isBlank()){
+        if (itemName == null || itemName.isEmpty() || itemName.isBlank()) {
             throw new IllegalArgumentException("Not enough " + itemName + " in the Fridge");
         }
 
@@ -92,11 +92,23 @@ public class SmartFridge implements SmartFridgeAPI {
 
     @Override
     public Iterator<Ingredient<? extends Storable>> getMissingIngredientsFromRecipe(Recipe recipe) {
+//        boolean checkIfFoodIsExpired = foods.peek().isExpired();
         return null;
     }
 
     @Override
     public List<? extends Storable> removeExpired() {
-        return null;
+
+        List<Storable> expiredFoods = new ArrayList<>();
+        Collection<Queue<Storable>> allFoods = storage.values();
+
+        for (Queue<Storable> items : allFoods) {
+            for (Storable i : items) {
+                if (i.isExpired()) {
+                    expiredFoods.add(i);
+                }
+            }
+        }
+        return expiredFoods;
     }
 }
